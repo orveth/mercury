@@ -2,7 +2,19 @@
 
 ## Phase
 
-Genesis complete. Ready for implementation.
+MVP complete. All Milestone 1 + 2 commands implemented and working.
+
+## What's built
+
+- Go CLI binary, builds via `nix build`, on PATH via nix profile
+- SQLite schema: `messages`, `subscriptions`, `cursors` tables
+- DB auto-created at `~/.local/share/mercury/mercury.db`
+- Commands: `send`, `read`, `subscribe`, `unsubscribe`, `channels`, `log`
+- Cursor tracking for per-agent unread position
+- WAL mode + busy_timeout=5000 for concurrent agent access
+- Input validation: empty `--as`, `--to`, `--channel` rejected
+- Hint when reading with no subscriptions
+- 7 core db tests (send/read/subscribe/unsubscribe/cursors/channels)
 
 ## Decisions made
 
@@ -14,38 +26,37 @@ Genesis complete. Ready for implementation.
 - Nix flake for builds and dev shell
 - Maximally flexible — convention evolves in practice, not in code
 
-## Implementation plan
+## Milestone status
 
-### Milestone 1: Core (MVP)
+### Milestone 1: Core (MVP) — DONE
+1. ~~Scaffold Go project with Nix flake~~
+2. ~~SQLite schema + migration on first run~~
+3. ~~`mercury send --as NAME --to CHANNEL BODY`~~
+4. ~~`mercury read --as NAME`~~
+5. ~~`mercury subscribe --as NAME --channel CHANNEL`~~
+6. ~~`mercury channels`~~
 
-1. Scaffold Go project with Nix flake
-2. SQLite schema + migration on first run
-3. `mercury send --as NAME --to CHANNEL BODY`
-4. `mercury read --as NAME` (show unread from subscribed channels)
-5. `mercury subscribe --as NAME --channel CHANNEL`
-6. `mercury channels` (list known channels)
+### Milestone 2: Usability — DONE
+7. ~~`mercury read --follow`~~ (poll-based)
+8. ~~`mercury log`~~
+9. ~~`mercury unsubscribe`~~
+10. ~~Cursor tracking~~
 
-### Milestone 2: Usability
+### Milestone 3: Integration — IN PROGRESS
+11. ~~Mercury skill~~ — complete, polished with smoke test feedback, symlinked to ~/.claude/skills/mercury
+12. ~~Smoke test~~ — oracle + keeper:mercury + worker:smoke-test exchanged messages on the bus
+13. Document conventions that emerged during dogfooding — ongoing
 
-7. `mercury read --follow` (poll and block for new messages)
-8. `mercury log` (full history, optionally filtered)
-9. `mercury unsubscribe`
-10. Cursor tracking (per-agent read position so "unread" works)
+## Current work
 
-### Milestone 3: Integration
-
-11. Shell helpers for tmux-lanes integration
-12. Smoke test: two agents exchange messages without human relay
-13. Document conventions that emerged during dogfooding
-
-## Active lanes
-
-None yet.
+Settling. v0.1.0 shipped, foundation hardened. Bus is live and carrying real traffic.
 
 ## Blockers
 
 None.
 
-## Next action
+## Next actions
 
-Scaffold Go project with Nix flake, implement send + read + subscribe.
+- Continue dogfooding — conventions emerge from use
+- Consider `mercury who` if discovery need proves real
+- Tag v0.2.0 when next batch of improvements lands
