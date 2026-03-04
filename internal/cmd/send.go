@@ -17,6 +17,13 @@ func newSendCmd() *cobra.Command {
 		Use:   "send [body...]",
 		Short: "Send a message to a channel",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := requireNonEmpty("--as", as); err != nil {
+				return err
+			}
+			if err := requireNonEmpty("--to", to); err != nil {
+				return err
+			}
+
 			var body string
 			if len(args) > 0 {
 				body = strings.Join(args, " ")

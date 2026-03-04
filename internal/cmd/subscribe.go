@@ -12,6 +12,13 @@ func newSubscribeCmd() *cobra.Command {
 		Use:   "subscribe",
 		Short: "Subscribe to a channel",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := requireNonEmpty("--as", as); err != nil {
+				return err
+			}
+			if err := requireNonEmpty("--channel", channel); err != nil {
+				return err
+			}
+
 			d, err := db.Open()
 			if err != nil {
 				return err
